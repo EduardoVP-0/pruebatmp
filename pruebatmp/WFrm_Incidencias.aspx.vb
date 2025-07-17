@@ -15,7 +15,7 @@ Partial Class _Default
 
         Try
             connection.Open()
-            lblResultado.Text = "✅ Conexión exitosa a la base de datos."
+            lblResultado.Text = "✅ Conexión exitosa a la base de datos"
         Catch ex As Exception
             lblResultado.Text = "❌ Error de conexión: " & ex.Message
         Finally
