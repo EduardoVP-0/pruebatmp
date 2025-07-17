@@ -2,7 +2,7 @@
 Imports System.Configuration
 Imports System.Data
 
-Partial Class _Default
+Partial Class WFrm_Incidencias
     Inherits System.Web.UI.Page
 
     Protected Sub btnProbarConexion_Click(ByVal sender As Object, ByVal e As EventArgs)
