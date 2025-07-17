@@ -100,6 +100,7 @@
                 <div class="gridview-container">
                     <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="true"
                         CssClass="table table-bordered gridview-custom" GridLines="None" />
+
                 </div>
             </div>
         </div>
