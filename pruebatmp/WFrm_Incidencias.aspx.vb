@@ -3,6 +3,37 @@ Imports System.Data.SqlClient
 
 Partial Class WFrm_Incidencias
     Inherits System.Web.UI.Page
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+        If Not IsPostBack Then
+            CargarTipoJustificacion()
+        End If
+    End Sub
+
+    Private Sub CargarTipoJustificacion()
+        Dim connectionString As String = "Server=172.16.39.64;Database=SimadOC;User Id=Sa;Password=Semuigen2025;"
+        Dim query As String = "SELECT checktype, Desc_Tipo_Indicencia FROM TblC_Tipo_Incidencia"
+
+        Using connection As New SqlConnection(connectionString)
+            Dim cmd As New SqlCommand(query, connection)
+            Dim adapter As New SqlDataAdapter(cmd)
+            Dim dt As New DataTable()
+
+            Try
+                connection.Open()
+                adapter.Fill(dt)
+
+                ddlTipoJustificacion.DataSource = dt
+                ddlTipoJustificacion.DataTextField = "Desc_Tipo_Indicencia"
+                ddlTipoJustificacion.DataValueField = "checktype"
+                ddlTipoJustificacion.DataBind()
+
+                ddlTipoJustificacion.Items.Insert(0, New ListItem("-- Tipo de Justificacion --", ""))
+            Catch ex As Exception
+                lblResultado.CssClass = "mensaje text-danger fs-5"
+                lblResultado.Text = "❌ Error al cargar tipos de justificación: " & ex.Message
+            End Try
+        End Using
+    End Sub
 
     Protected Sub btnProbarConexion_Click(ByVal sender As Object, ByVal e As EventArgs)
         Dim connectionString As String = "Server=172.16.39.64;Database=SimadOC;User Id=Sa;Password=Semuigen2025;"
@@ -53,7 +84,7 @@ Partial Class WFrm_Incidencias
 
             Dim cmd As New SqlCommand(query, connection)
             cmd.Parameters.AddWithValue("@NumJust", txtNumJustificacion.Text)
-            cmd.Parameters.AddWithValue("@TipoJust", txtTipoJustificacion.Text)
+            cmd.Parameters.AddWithValue("@TipoJust", ddlTipoJustificacion.SelectedValue)
             cmd.Parameters.AddWithValue("@FechaJust", Convert.ToDateTime(txtFechaJustificacion.Text))
             cmd.Parameters.AddWithValue("@NumMemo", txtNumMemo.Text)
             cmd.Parameters.AddWithValue("@Motivo", txtMotivo.Text)
@@ -70,7 +101,6 @@ Partial Class WFrm_Incidencias
 
                 ' Limpiar campos
                 txtNumJustificacion.Text = ""
-                txtTipoJustificacion.Text = ""
                 txtFechaJustificacion.Text = ""
                 txtNumMemo.Text = ""
                 txtMotivo.Text = ""
@@ -78,6 +108,7 @@ Partial Class WFrm_Incidencias
                 txtFechaCaptura.Text = ""
                 txtPeriodo.Text = ""
                 txtLugar.Text = ""
+                ddlTipoJustificacion.SelectedIndex = 0
             Catch ex As Exception
                 lblResultado.CssClass = "mensaje text-danger fs-5"
                 lblResultado.Text = "❌ Error al agregar: " & ex.Message

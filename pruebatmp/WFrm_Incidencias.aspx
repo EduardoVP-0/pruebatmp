@@ -106,46 +106,47 @@
 
                 <asp:Label ID="lblResultado" runat="server" CssClass="mensaje text-white fs-5" />
                 <!-- Formulario oculto -->
-<div id="formularioAgregar" style="display:none;" class="mt-4">
-    <div class="card card-body bg-light">
-        <h5 class="text-center text-dark mb-3">Nueva Justificación</h5>
+                <div id="formularioAgregar" style="display: none;" class="mt-4">
+                    <div class="card card-body bg-light">
+                        <h5 class="text-center text-dark mb-3">Nueva Justificación</h5>
 
-        <div class="row">
-            <div class="col-md-4 mb-2">
-                <asp:TextBox ID="txtNumJustificacion" runat="server" CssClass="form-control" placeholder="Número Justificación"></asp:TextBox>
-            </div>
-            <div class="col-md-4 mb-2">
-                <asp:TextBox ID="txtTipoJustificacion" runat="server" CssClass="form-control" placeholder="Tipo Justificación"></asp:TextBox>
-            </div>
-            <div class="col-md-4 mb-2">
-                <asp:TextBox ID="txtFechaJustificacion" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Justificación"></asp:TextBox>
-            </div>
-            <div class="col-md-6 mb-2">
-                <asp:TextBox ID="txtNumMemo" runat="server" CssClass="form-control" placeholder="Número de Memo"></asp:TextBox>
-            </div>
-            <div class="col-md-6 mb-2">
-                <asp:TextBox ID="txtMotivo" runat="server" CssClass="form-control" placeholder="Motivo de Justificación"></asp:TextBox>
-            </div>
-            <div class="col-md-4 mb-2">
-                <asp:TextBox ID="txtIdUsuario" runat="server" CssClass="form-control" placeholder="ID Usuario Captura"></asp:TextBox>
-            </div>
-            <div class="col-md-4 mb-2">
-                <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Captura"></asp:TextBox>
-            </div>
-            <div class="col-md-4 mb-2">
-                <asp:TextBox ID="txtPeriodo" runat="server" CssClass="form-control" placeholder="Periodo Vacacional"></asp:TextBox>
-            </div>
-            <div class="col-md-12 mb-2">
-                <asp:TextBox ID="txtLugar" runat="server" CssClass="form-control" placeholder="Lugar de Expedición"></asp:TextBox>
-            </div>
-        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <asp:TextBox ID="txtNumJustificacion" runat="server" CssClass="form-control" placeholder="Número Justificación"></asp:TextBox>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <asp:DropDownList ID="ddlTipoJustificacion" runat="server" CssClass="form-control">
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <asp:TextBox ID="txtFechaJustificacion" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Justificación"></asp:TextBox>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <asp:TextBox ID="txtNumMemo" runat="server" CssClass="form-control" placeholder="Número de Memo"></asp:TextBox>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <asp:TextBox ID="txtMotivo" runat="server" CssClass="form-control" placeholder="Motivo de Justificación"></asp:TextBox>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <asp:TextBox ID="txtIdUsuario" runat="server" CssClass="form-control" placeholder="ID Usuario Captura"></asp:TextBox>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Captura"></asp:TextBox>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <asp:TextBox ID="txtPeriodo" runat="server" CssClass="form-control" placeholder="Periodo Vacacional"></asp:TextBox>
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <asp:TextBox ID="txtLugar" runat="server" CssClass="form-control" placeholder="Lugar de Expedición"></asp:TextBox>
+                            </div>
+                        </div>
 
-        <div class="text-center mt-3">
-            <asp:Button ID="btnGuardar" runat="server" Text="Guardar Justificación"
-                CssClass="btn btn-success btn-animated" OnClick="btnGuardar_Click" />
-        </div>
-    </div>
-</div>
+                        <div class="text-center mt-3">
+                            <asp:Button ID="btnGuardar" runat="server" Text="Guardar Justificación"
+                                CssClass="btn btn-success btn-animated" OnClick="btnGuardar_Click" />
+                        </div>
+                    </div>
+                </div>
 
 
                 <div class="gridview-container">
