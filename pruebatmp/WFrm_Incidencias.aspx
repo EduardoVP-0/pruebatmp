@@ -146,6 +146,40 @@
                                 CssClass="btn btn-success btn-animated" OnClick="btnGuardar_Click" />
                         </div>
                     </div>
+                    <!-- Campo para capturar el PIN -->
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN"></asp:TextBox>
+                        </div>
+                    </div>
+
+                    <!-- Agregar fechas a la tabla -->
+                    <div class="row align-items-end">
+                        <div class="col-md-4 mb-2">
+                            <asp:TextBox ID="txtFechaNueva" runat="server" CssClass="form-control" TextMode="Date" placeholder="Fecha para agregar"></asp:TextBox>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <asp:DropDownList ID="ddlTipoNueva" runat="server" CssClass="form-control"></asp:DropDownList>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <asp:Button ID="btnAgregarFecha" runat="server" Text="Agregar Fecha" CssClass="btn btn-primary btn-animated w-100" OnClick="btnAgregarFecha_Click" />
+                        </div>
+                    </div>
+
+                    <!-- Tabla para fechas agregadas -->
+                    <asp:GridView ID="gvFechasAgregadas" runat="server" AutoGenerateColumns="False"
+                        CssClass="table table-striped table-bordered mt-3" GridLines="None"
+                        OnRowCommand="gvFechasAgregadas_RowCommand">
+                        <Columns>
+                            <asp:BoundField DataField="Fecha" HeaderText="Fecha" />
+                            <asp:BoundField DataField="DiaSemana" HeaderText="Día" />
+                            <asp:BoundField DataField="Tipo" HeaderText="Tipo Justificación" />
+                            <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
+                            <asp:ButtonField ButtonType="Button" CommandName="Eliminar" Text="Quitar"
+                                ControlStyle-CssClass="btn btn-danger btn-sm" />
+                        </Columns>
+                    </asp:GridView>
+
                 </div>
 
 
