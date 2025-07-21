@@ -231,6 +231,11 @@ Partial Class WFrm_Incidencias
             End Try
         End Using
     End Sub
+    ' Nuevo método para sincronizar automáticamente el tipo de justificación de la fecha
+    Protected Sub ddlTipoJustificacion_SelectedIndexChanged(sender As Object, e As EventArgs)
+        ddlTipoNueva.SelectedValue = ddlTipoJustificacion.SelectedValue
+    End Sub
+
 
 
 End Class
