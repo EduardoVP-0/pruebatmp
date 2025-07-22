@@ -11,8 +11,8 @@ Partial Class WFrm_Incidencias
     End Sub
 
     Private Sub CargarTipoJustificacion()
-        Dim connectionString As String = "Server=172.16.39.64;Database=SimadOC;User Id=Sa;Password=Semuigen2025;"
-        Dim query As String = "SELECT checktype, Desc_Tipo_Indicencia FROM TblC_Tipo_Incidencia"
+        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
+        Dim query As String = "SELECT checktype, Desc_Tipo_Incidencia FROM TblC_Tipo_Incidencia"
 
         Using connection As New SqlConnection(connectionString)
             Dim cmd As New SqlCommand(query, connection)
@@ -24,7 +24,7 @@ Partial Class WFrm_Incidencias
                 adapter.Fill(dt)
 
                 ddlTipoJustificacion.DataSource = dt
-                ddlTipoJustificacion.DataTextField = "Desc_Tipo_Indicencia"
+                ddlTipoJustificacion.DataTextField = "Desc_Tipo_Incidencia"
                 ddlTipoJustificacion.DataValueField = "checktype"
                 ddlTipoJustificacion.DataBind()
 
@@ -37,7 +37,7 @@ Partial Class WFrm_Incidencias
     End Sub
 
     Protected Sub btnProbarConexion_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Dim connectionString As String = "Server=172.16.39.64;Database=SimadOC;User Id=Sa;Password=Semuigen2025;"
+        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
         Dim connection As New SqlConnection(connectionString)
 
         Try
@@ -53,7 +53,7 @@ Partial Class WFrm_Incidencias
     End Sub
 
     Protected Sub btnMostrarVista_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Dim connectionString As String = "Server=172.16.39.64;Database=SimadOC;User Id=Sa;Password=Semuigen2025;"
+        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
         Dim query As String = "SELECT * FROM VwRpt_Incidencias"
 
         Using connection As New SqlConnection(connectionString)
@@ -77,8 +77,8 @@ Partial Class WFrm_Incidencias
 
     ' Cargar tipos de justificación también en ddlTipoNueva
     Private Sub CargarTipoJustificacion1()
-        Dim connectionString As String = "Server=172.16.39.64;Database=SimadOC;User Id=Sa;Password=Semuigen2025;"
-        Dim query As String = "SELECT checktype, Desc_Tipo_Indicencia FROM TblC_Tipo_Incidencia"
+        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
+        Dim query As String = "SELECT checktype, Desc_Tipo_Incidencia FROM TblC_Tipo_Incidencia"
 
         Using connection As New SqlConnection(connectionString)
             Dim cmd As New SqlCommand(query, connection)
@@ -90,13 +90,13 @@ Partial Class WFrm_Incidencias
                 adapter.Fill(dt)
 
                 ddlTipoJustificacion.DataSource = dt
-                ddlTipoJustificacion.DataTextField = "Desc_Tipo_Indicencia"
+                ddlTipoJustificacion.DataTextField = "Desc_Tipo_Incidencia"
                 ddlTipoJustificacion.DataValueField = "checktype"
                 ddlTipoJustificacion.DataBind()
                 ddlTipoJustificacion.Items.Insert(0, New ListItem("-- Tipo de Justificación --", ""))
 
                 ddlTipoNueva.DataSource = dt
-                ddlTipoNueva.DataTextField = "Desc_Tipo_Indicencia"
+                ddlTipoNueva.DataTextField = "Desc_Tipo_Incidencia"
                 ddlTipoNueva.DataValueField = "checktype"
                 ddlTipoNueva.DataBind()
                 ddlTipoNueva.Items.Insert(0, New ListItem("-- Tipo --", ""))
@@ -164,7 +164,7 @@ Partial Class WFrm_Incidencias
     End Sub
 
     Protected Sub btnGuardar_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Dim connectionString As String = "Server=172.16.39.64;Database=SimadOC;User Id=Sa;Password=Semuigen2025;"
+        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
 
         Using connection As New SqlConnection(connectionString)
             connection.Open()
@@ -172,7 +172,7 @@ Partial Class WFrm_Incidencias
 
             Try
                 ' Guardar en TbIP_Justificaciones
-                Dim queryJust As String = "INSERT INTO TbIP_Justificaciones" &
+                Dim queryJust As String = "INSERT INTO TblP_Justificaciones2" &
             "(Num_Justificacion, Tipo_Justificacion, Fecha_Justificacion, Num_Memo_Justificacion, Motivo_Justificacion," &
              "idusuario_Captura, Fecha_Captura, Periodo_Vacacional, Lugar_Exp)" &
              "VALUES (@NumJust, @TipoJust, @FechaJust, @NumMemo, @Motivo, @IdUsuario, @FechaCap, @Periodo, @Lugar)"
@@ -192,7 +192,7 @@ Partial Class WFrm_Incidencias
                 ' Guardar en checkinout_justif
                 Dim tabla As DataTable = ObtenerTablaTemporal()
                 For Each fila As DataRow In tabla.Rows
-                    Dim queryCheck As String = "INSERT INTO checkinout_justif (Num_Justificacion, checktime, checktype, pin) " &
+                    Dim queryCheck As String = "INSERT INTO checkinout_justif2 (Num_Justificacion, checktime, checktype, pin) " &
                                            "VALUES (@NumJust, @Fecha, @Tipo, @PIN)"
                     Dim cmdCheck As New SqlCommand(queryCheck, connection, transaction)
                     cmdCheck.Parameters.AddWithValue("@NumJust", txtNumJustificacion.Text)
