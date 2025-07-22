@@ -31,7 +31,7 @@ Partial Class WFrm_Incidencias
                 ddlTipoJustificacion.Items.Insert(0, New ListItem("-- Tipo de Justificacion --", ""))
             Catch ex As Exception
                 lblResultado.CssClass = "mensaje text-danger fs-5"
-                lblResultado.Text = "❌ Error al cargar tipos de justificación: " & ex.Message
+                lblResultado.Text = "❌ Error al cargar tipos de justificacion: " & ex.Message
             End Try
         End Using
     End Sub
