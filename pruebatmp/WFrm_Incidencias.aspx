@@ -5,7 +5,6 @@
 <head runat="server">
     <title>Incidencias con Estilo</title>
 
-    <!-- Bootstrap 5.3 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -23,15 +22,8 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .btn-animated {
@@ -39,10 +31,10 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-            .btn-animated:hover {
-                transform: scale(1.05);
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-            }
+        .btn-animated:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
 
         .mensaje {
             animation: fadeIn 1s;
@@ -51,13 +43,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .gridview-container {
@@ -106,7 +93,6 @@
 
                 <asp:Label ID="lblResultado" runat="server" CssClass="mensaje text-white fs-5" />
 
-                <!-- Formulario oculto -->
                 <div id="formularioAgregar" style="display: none;" class="mt-4">
                     <asp:UpdatePanel ID="upFormulario" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
@@ -123,22 +109,32 @@
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtFechaJustificacion" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Justificación"></asp:TextBox>
                                     </div>
+
                                     <div class="col-md-6 mb-2">
                                         <asp:TextBox ID="txtNumMemo" runat="server" CssClass="form-control" placeholder="Número de Memo"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <asp:TextBox ID="txtMotivo" runat="server" CssClass="form-control" placeholder="Motivo de Justificación"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-4 mb-2">
+
+                                    <!-- NUEVO: DropDownList de empleados -->
+                                    <div class="col-md-6 mb-2">
+                                        <asp:DropDownList ID="ddlEmpleados" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlEmpleados_SelectedIndexChanged" />
+                                    </div>
+                                    <div class="col-md-6 mb-2">
                                         <asp:TextBox ID="txtIdUsuario" runat="server" CssClass="form-control" placeholder="ID Usuario Captura"></asp:TextBox>
                                     </div>
+                                    <div class="col-md-6 mb-2">
+                                        <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN"></asp:TextBox>
+                                    </div>
+
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Captura"></asp:TextBox>
                                     </div>
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtPeriodo" runat="server" CssClass="form-control" placeholder="Periodo Vacacional"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-12 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtLugar" runat="server" CssClass="form-control" placeholder="Lugar de Expedición"></asp:TextBox>
                                     </div>
                                 </div>
@@ -150,13 +146,6 @@
                             </div>
                         </ContentTemplate>
                     </asp:UpdatePanel>
-
-                    <!-- Campo para capturar el PIN -->
-                    <div class="row">
-                        <div class="col-md-6 mb-2">
-                            <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN"></asp:TextBox>
-                        </div>
-                    </div>
 
                     <!-- Agregar fechas a la tabla con UpdatePanel -->
                     <asp:UpdatePanel ID="upFechas" runat="server">
@@ -173,7 +162,6 @@
                                 </div>
                             </div>
 
-                            <!-- Tabla para fechas agregadas -->
                             <asp:GridView ID="gvFechasAgregadas" runat="server" AutoGenerateColumns="False"
                                 CssClass="table table-striped table-bordered mt-3" GridLines="None"
                                 OnRowCommand="gvFechasAgregadas_RowCommand">
@@ -188,7 +176,6 @@
                             </asp:GridView>
                         </ContentTemplate>
                     </asp:UpdatePanel>
-
                 </div>
 
                 <div class="gridview-container">
@@ -207,3 +194,4 @@
     </script>
 </body>
 </html>
+

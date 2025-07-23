@@ -3,10 +3,12 @@ Imports System.Data.SqlClient
 
 Partial Class WFrm_Incidencias
     Inherits System.Web.UI.Page
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         If Not IsPostBack Then
             CargarTipoJustificacion()
             CargarTipoJustificacion1()
+            CargarEmpleados() ' NUEVO
         End If
     End Sub
 
@@ -34,6 +36,70 @@ Partial Class WFrm_Incidencias
                 lblResultado.Text = "❌ Error al cargar tipos de justificacion: " & ex.Message
             End Try
         End Using
+    End Sub
+
+    Private Sub CargarTipoJustificacion1()
+        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
+        Dim query As String = "SELECT checktype, Desc_Tipo_Incidencia FROM TblC_Tipo_Incidencia"
+
+        Using connection As New SqlConnection(connectionString)
+            Dim cmd As New SqlCommand(query, connection)
+            Dim adapter As New SqlDataAdapter(cmd)
+            Dim dt As New DataTable()
+
+            Try
+                connection.Open()
+                adapter.Fill(dt)
+
+                ddlTipoJustificacion.DataSource = dt
+                ddlTipoJustificacion.DataTextField = "Desc_Tipo_Incidencia"
+                ddlTipoJustificacion.DataValueField = "checktype"
+                ddlTipoJustificacion.DataBind()
+                ddlTipoJustificacion.Items.Insert(0, New ListItem("-- Tipo de Justificación --", ""))
+
+                ddlTipoNueva.DataSource = dt
+                ddlTipoNueva.DataTextField = "Desc_Tipo_Incidencia"
+                ddlTipoNueva.DataValueField = "checktype"
+                ddlTipoNueva.DataBind()
+                ddlTipoNueva.Items.Insert(0, New ListItem("-- Tipo --", ""))
+
+            Catch ex As Exception
+                lblResultado.CssClass = "mensaje text-danger fs-5"
+                lblResultado.Text = "❌ Error al cargar tipos de justificación: " & ex.Message
+            End Try
+        End Using
+    End Sub
+
+    ' NUEVO: Cargar empleados desde la vista
+    Private Sub CargarEmpleados()
+        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
+        Dim query As String = "SELECT Userid, NomEmpleado FROM VwC_Empleados WHERE status = 1 ORDER BY NomEmpleado"
+
+        Using connection As New SqlConnection(connectionString)
+            Dim cmd As New SqlCommand(query, connection)
+            Dim adapter As New SqlDataAdapter(cmd)
+            Dim dt As New DataTable()
+
+            Try
+                connection.Open()
+                adapter.Fill(dt)
+
+                ddlEmpleados.DataSource = dt
+                ddlEmpleados.DataTextField = "NomEmpleado"
+                ddlEmpleados.DataValueField = "Userid"
+                ddlEmpleados.DataBind()
+                ddlEmpleados.Items.Insert(0, New ListItem("-- Selecciona un Empleado --", ""))
+            Catch ex As Exception
+                lblResultado.CssClass = "mensaje text-danger fs-5"
+                lblResultado.Text = "❌ Error al cargar empleados: " & ex.Message
+            End Try
+        End Using
+    End Sub
+
+    ' MODIFICADO: Cuando selecciona un empleado, rellenar también el PIN
+    Protected Sub ddlEmpleados_SelectedIndexChanged(sender As Object, e As EventArgs)
+        txtIdUsuario.Text = ddlEmpleados.SelectedValue
+        txtPIN.Text = ddlEmpleados.SelectedValue
     End Sub
 
     Protected Sub btnProbarConexion_Click(ByVal sender As Object, ByVal e As EventArgs)
@@ -75,39 +141,6 @@ Partial Class WFrm_Incidencias
         End Using
     End Sub
 
-    ' Cargar tipos de justificación también en ddlTipoNueva
-    Private Sub CargarTipoJustificacion1()
-        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
-        Dim query As String = "SELECT checktype, Desc_Tipo_Incidencia FROM TblC_Tipo_Incidencia"
-
-        Using connection As New SqlConnection(connectionString)
-            Dim cmd As New SqlCommand(query, connection)
-            Dim adapter As New SqlDataAdapter(cmd)
-            Dim dt As New DataTable()
-
-            Try
-                connection.Open()
-                adapter.Fill(dt)
-
-                ddlTipoJustificacion.DataSource = dt
-                ddlTipoJustificacion.DataTextField = "Desc_Tipo_Incidencia"
-                ddlTipoJustificacion.DataValueField = "checktype"
-                ddlTipoJustificacion.DataBind()
-                ddlTipoJustificacion.Items.Insert(0, New ListItem("-- Tipo de Justificación --", ""))
-
-                ddlTipoNueva.DataSource = dt
-                ddlTipoNueva.DataTextField = "Desc_Tipo_Incidencia"
-                ddlTipoNueva.DataValueField = "checktype"
-                ddlTipoNueva.DataBind()
-                ddlTipoNueva.Items.Insert(0, New ListItem("-- Tipo --", ""))
-
-            Catch ex As Exception
-                lblResultado.CssClass = "mensaje text-danger fs-5"
-                lblResultado.Text = "❌ Error al cargar tipos de justificación: " & ex.Message
-            End Try
-        End Using
-    End Sub
-
     Private Function ObtenerTablaTemporal() As DataTable
         Dim tabla As DataTable = TryCast(ViewState("TablaFechas"), DataTable)
         If tabla Is Nothing Then
@@ -134,7 +167,6 @@ Partial Class WFrm_Incidencias
         Dim tipo As String = ddlTipoNueva.SelectedValue
         Dim descripcion As String = ddlTipoNueva.SelectedItem.Text
 
-        ' Validar duplicado
         For Each fila As DataRow In tabla.Rows
             If fila("Fecha").ToString() = fecha.ToShortDateString() Then
                 lblResultado.CssClass = "mensaje text-warning fs-5"
@@ -171,11 +203,10 @@ Partial Class WFrm_Incidencias
             Dim transaction = connection.BeginTransaction()
 
             Try
-                ' Guardar en TbIP_Justificaciones
                 Dim queryJust As String = "INSERT INTO TblP_Justificaciones2" &
-            "(Num_Justificacion, Tipo_Justificacion, Fecha_Justificacion, Num_Memo_Justificacion, Motivo_Justificacion," &
-             "idusuario_Captura, Fecha_Captura, Periodo_Vacacional, Lugar_Exp)" &
-             "VALUES (@NumJust, @TipoJust, @FechaJust, @NumMemo, @Motivo, @IdUsuario, @FechaCap, @Periodo, @Lugar)"
+                    "(Num_Justificacion, Tipo_Justificacion, Fecha_Justificacion, Num_Memo_Justificacion, Motivo_Justificacion," &
+                    "idusuario_Captura, Fecha_Captura, Periodo_Vacacional, Lugar_Exp)" &
+                    "VALUES (@NumJust, @TipoJust, @FechaJust, @NumMemo, @Motivo, @IdUsuario, @FechaCap, @Periodo, @Lugar)"
 
                 Dim cmdJust As New SqlCommand(queryJust, connection, transaction)
                 cmdJust.Parameters.AddWithValue("@NumJust", txtNumJustificacion.Text)
@@ -189,11 +220,10 @@ Partial Class WFrm_Incidencias
                 cmdJust.Parameters.AddWithValue("@Lugar", txtLugar.Text)
                 cmdJust.ExecuteNonQuery()
 
-                ' Guardar en checkinout_justif
                 Dim tabla As DataTable = ObtenerTablaTemporal()
                 For Each fila As DataRow In tabla.Rows
                     Dim queryCheck As String = "INSERT INTO checkinout_justif2 (Num_Justificacion, checktime, checktype, pin) " &
-                                           "VALUES (@NumJust, @Fecha, @Tipo, @PIN)"
+                                               "VALUES (@NumJust, @Fecha, @Tipo, @PIN)"
                     Dim cmdCheck As New SqlCommand(queryCheck, connection, transaction)
                     cmdCheck.Parameters.AddWithValue("@NumJust", txtNumJustificacion.Text)
                     cmdCheck.Parameters.AddWithValue("@Fecha", Convert.ToDateTime(fila("Fecha")))
@@ -219,6 +249,7 @@ Partial Class WFrm_Incidencias
                 txtFechaNueva.Text = ""
                 ddlTipoJustificacion.SelectedIndex = 0
                 ddlTipoNueva.SelectedIndex = 0
+                ddlEmpleados.SelectedIndex = 0
 
                 ViewState("TablaFechas") = Nothing
                 gvFechasAgregadas.DataSource = Nothing
@@ -231,11 +262,9 @@ Partial Class WFrm_Incidencias
             End Try
         End Using
     End Sub
-    ' Nuevo método para sincronizar automáticamente el tipo de justificación de la fecha
+
+    ' Sincronizar tipo justificación en ambos combos
     Protected Sub ddlTipoJustificacion_SelectedIndexChanged(sender As Object, e As EventArgs)
         ddlTipoNueva.SelectedValue = ddlTipoJustificacion.SelectedValue
     End Sub
-
-
-
 End Class
