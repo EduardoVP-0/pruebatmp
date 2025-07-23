@@ -98,7 +98,7 @@ Partial Class WFrm_Incidencias
 
     ' MODIFICADO: Cuando selecciona un empleado, rellenar también el PIN
     Protected Sub ddlEmpleados_SelectedIndexChanged(sender As Object, e As EventArgs)
-        txtIdUsuario.Text = ddlEmpleados.SelectedValue
+
         txtPIN.Text = ddlEmpleados.SelectedValue
     End Sub
 

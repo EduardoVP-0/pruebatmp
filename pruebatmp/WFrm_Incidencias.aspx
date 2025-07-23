@@ -124,8 +124,8 @@
                                     <div class="col-md-6 mb-2">
                                         <asp:TextBox ID="txtIdUsuario" runat="server" CssClass="form-control" placeholder="ID Usuario Captura"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-6 mb-2">
-                                        <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN"></asp:TextBox>
+                                    <div>
+                                        <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN" Style="display:none;" />
                                     </div>
 
                                     <div class="col-md-4 mb-2">
