@@ -9,69 +9,127 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 50px;
-        }
+    :root {
+        --verde-gob: #009887;
+        --rosa-gob: #C90166;
+        --rojo-gob: #AE192D;
+        --beige-gob: #D3C2B4;
+        --negro: #000000;
+    }
 
-        .card-custom {
-            animation: fadeInUp 1s ease-in-out;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
+    body {
+        background: linear-gradient(135deg, var(--beige-gob), #ffffff);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 50px;
+    }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .card-custom {
+        background-color: #ffffff;
+        border-left: 6px solid var(--verde-gob);
+        border-radius: 15px;
+        animation: fadeInUp 1s ease-in-out;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
 
-        .btn-animated {
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+    h2, h5 {
+        color: var(--rojo-gob) !important;
+        font-weight: 700;
+    }
 
-        .btn-animated:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-        }
+    .btn-animated {
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        font-weight: bold !important;
+        color: white !important;
+    }
 
-        .mensaje {
-            animation: fadeIn 1s;
-            font-weight: bold;
-            text-align: center;
-        }
+    .btn-animated:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+    #btnProbarConexion {
+        background-color: var(--verde-gob) !important;
+    }
 
-        .gridview-container {
-            animation: fadeIn 1.5s ease-in;
-            margin-top: 20px;
-        }
+    #btnMostrarVista {
+        background-color: var(--rojo-gob) !important;
+    }
 
-        .gridview-custom th {
-            background-color: #4e54c8;
-            color: white;
-            padding: 10px;
-            text-align: left;
-        }
+    #btnMostrarFormulario {
+        background-color: var(--rosa-gob) !important;
+    }
 
-        .gridview-custom td {
-            padding: 8px;
-            background-color: white;
-        }
+    #btnGuardar {
+        background-color: var(--verde-gob) !important;
+    }
 
-        .gridview-custom tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
+    #btnAgregarFecha {
+        background-color: var(--rojo-gob) !important;
+    }
 
-        .gridview-custom tr:hover {
-            background-color: #e9ecef;
-        }
-    </style>
+    .mensaje {
+        animation: fadeIn 1s;
+        font-weight: bold;
+        text-align: center;
+        color: var(--negro) !important;
+    }
+
+    .form-control {
+        border: 1px solid var(--verde-gob) !important;
+        border-radius: 8px;
+    }
+
+    .form-control:focus {
+        border-color: var(--rojo-gob) !important;
+        box-shadow: 0 0 5px var(--rojo-gob) !important;
+    }
+
+    .gridview-container {
+        animation: fadeIn 1.5s ease-in;
+        margin-top: 20px;
+    }
+
+    .gridview-custom th {
+        background-color: var(--verde-gob) !important;
+        color: white !important;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .gridview-custom td {
+        padding: 8px;
+        background-color: white;
+    }
+
+    .gridview-custom tr:nth-child(even) {
+        background-color: var(--beige-gob);
+    }
+
+    .gridview-custom tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn-danger {
+        background-color: var(--rosa-gob) !important;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background-color: var(--rojo-gob) !important;
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+
 </head>
 <body>
     <form id="form1" runat="server">
@@ -83,12 +141,12 @@
 
                 <div class="text-center mb-3">
                     <asp:Button ID="btnProbarConexion" runat="server" Text="Probar Conexión"
-                        CssClass="btn btn-primary btn-animated me-2" OnClick="btnProbarConexion_Click" />
+                        CssClass="btn btn-animated me-2" OnClick="btnProbarConexion_Click" />
 
                     <asp:Button ID="btnMostrarVista" runat="server" Text="Mostrar Incidencias"
-                        CssClass="btn btn-success btn-animated" OnClick="btnMostrarVista_Click" />
+                        CssClass="btn btn-animated" OnClick="btnMostrarVista_Click" />
                     <asp:Button ID="btnMostrarFormulario" runat="server" Text="Agregar Justificación"
-                        CssClass="btn btn-warning btn-animated mt-2" OnClientClick="toggleFormulario(); return false;" />
+                        CssClass="btn btn-animated mt-2" OnClientClick="toggleFormulario(); return false;" />
                 </div>
 
                 <asp:Label ID="lblResultado" runat="server" CssClass="mensaje text-white fs-5" />
