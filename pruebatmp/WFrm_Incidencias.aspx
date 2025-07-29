@@ -48,24 +48,12 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
     }
 
-    #btnProbarConexion {
-        background-color: var(--verde-gob) !important;
-    }
-
-    #btnMostrarVista {
-        background-color: var(--rojo-gob) !important;
-    }
-
     #btnMostrarFormulario {
         background-color: var(--rosa-gob) !important;
     }
 
-    #btnGuardar {
-        background-color: var(--verde-gob) !important;
-    }
-
-    #btnAgregarFecha {
-        background-color: var(--rojo-gob) !important;
+    .btn-close {
+        background-color: #000;
     }
 
     .mensaje {
@@ -73,16 +61,6 @@
         font-weight: bold;
         text-align: center;
         color: var(--negro) !important;
-    }
-
-    .form-control {
-        border: 1px solid var(--verde-gob) !important;
-        border-radius: 8px;
-    }
-
-    .form-control:focus {
-        border-color: var(--rojo-gob) !important;
-        box-shadow: 0 0 5px var(--rojo-gob) !important;
     }
 
     .gridview-container {
@@ -110,15 +88,6 @@
         background-color: #f1f1f1;
     }
 
-    .btn-danger {
-        background-color: var(--rosa-gob) !important;
-        border: none;
-    }
-
-    .btn-danger:hover {
-        background-color: var(--rojo-gob) !important;
-    }
-
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
@@ -128,8 +97,7 @@
         from { opacity: 0; }
         to { opacity: 1; }
     }
-</style>
-
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -140,23 +108,31 @@
                 <h2 class="text-center text-dark mb-4">Consulta de Incidencias</h2>
 
                 <div class="text-center mb-3">
-                    <asp:Button ID="btnProbarConexion" runat="server" Text="Probar Conexión"
-                        CssClass="btn btn-animated me-2" OnClick="btnProbarConexion_Click" />
-
-                    <asp:Button ID="btnMostrarVista" runat="server" Text="Mostrar Incidencias"
-                        CssClass="btn btn-animated" OnClick="btnMostrarVista_Click" />
                     <asp:Button ID="btnMostrarFormulario" runat="server" Text="Agregar Justificación"
-                        CssClass="btn btn-animated mt-2" OnClientClick="toggleFormulario(); return false;" />
+                        CssClass="btn btn-animated mt-2" OnClientClick="mostrarModal(); return false;" />
                 </div>
 
                 <asp:Label ID="lblResultado" runat="server" CssClass="mensaje text-white fs-5" />
 
-                <div id="formularioAgregar" style="display: none;" class="mt-4">
-                    <asp:UpdatePanel ID="upFormulario" runat="server" UpdateMode="Conditional">
-                        <ContentTemplate>
-                            <div class="card card-body bg-light">
-                                <h5 class="text-center text-dark mb-3">Nueva Justificación</h5>
+                <!-- Vista principal -->
+                <div class="gridview-container">
+                    <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="true"
+                        CssClass="table table-bordered gridview-custom" GridLines="None" />
+                </div>
+            </div>
+        </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="modalFormulario" tabindex="-1" aria-labelledby="modalFormularioLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title" id="modalFormularioLabel">Agregar Justificación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" onclick="cerrarYLimpiarModal()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <asp:UpdatePanel ID="upFormulario" runat="server" UpdateMode="Conditional">
+                            <ContentTemplate>
                                 <div class="row">
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtNumJustificacion" runat="server" CssClass="form-control" placeholder="Número Justificación"></asp:TextBox>
@@ -167,25 +143,19 @@
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtFechaJustificacion" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Justificación"></asp:TextBox>
                                     </div>
-
                                     <div class="col-md-6 mb-2">
                                         <asp:TextBox ID="txtNumMemo" runat="server" CssClass="form-control" placeholder="Número de Memo"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <asp:TextBox ID="txtMotivo" runat="server" CssClass="form-control" placeholder="Motivo de Justificación"></asp:TextBox>
                                     </div>
-
-                                    <!-- NUEVO: DropDownList de empleados -->
                                     <div class="col-md-6 mb-2">
                                         <asp:DropDownList ID="ddlEmpleados" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlEmpleados_SelectedIndexChanged" />
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <asp:TextBox ID="txtIdUsuario" runat="server" CssClass="form-control" placeholder="ID Usuario Captura"></asp:TextBox>
                                     </div>
-                                    <div>
-                                        <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN" Style="display:none;" />
-                                    </div>
-
+                                    <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN" Style="display:none;" />
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Captura"></asp:TextBox>
                                     </div>
@@ -197,57 +167,68 @@
                                     </div>
                                 </div>
 
+                                <!-- Fechas agregadas -->
+                                <div class="row align-items-end mt-3">
+                                    <div class="col-md-4 mb-2">
+                                        <asp:TextBox ID="txtFechaNueva" runat="server" CssClass="form-control" TextMode="Date" placeholder="Fecha para agregar"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <asp:DropDownList ID="ddlTipoNueva" runat="server" CssClass="form-control" Enabled="false"></asp:DropDownList>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <asp:Button ID="btnAgregarFecha" runat="server" Text="Agregar Fecha" CssClass="btn btn-primary btn-animated w-100" OnClick="btnAgregarFecha_Click" />
+                                    </div>
+                                </div>
+
+                                <asp:GridView ID="gvFechasAgregadas" runat="server" AutoGenerateColumns="False"
+                                    CssClass="table table-striped table-bordered mt-3" GridLines="None"
+                                    OnRowCommand="gvFechasAgregadas_RowCommand">
+                                    <Columns>
+                                        <asp:BoundField DataField="Fecha" HeaderText="Fecha" />
+                                        <asp:BoundField DataField="DiaSemana" HeaderText="Día" />
+                                        <asp:BoundField DataField="Tipo" HeaderText="Tipo Justificación" />
+                                        <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
+                                        <asp:ButtonField ButtonType="Button" CommandName="Eliminar" Text="Quitar"
+                                            ControlStyle-CssClass="btn btn-danger btn-sm" />
+                                    </Columns>
+                                </asp:GridView>
+
                                 <div class="text-center mt-3">
                                     <asp:Button ID="btnGuardar" runat="server" Text="Guardar Justificación"
                                         CssClass="btn btn-success btn-animated" OnClick="btnGuardar_Click" />
                                 </div>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-
-                    <!-- Agregar fechas a la tabla con UpdatePanel -->
-                    <asp:UpdatePanel ID="upFechas" runat="server">
-                        <ContentTemplate>
-                            <div class="row align-items-end">
-                                <div class="col-md-4 mb-2">
-                                    <asp:TextBox ID="txtFechaNueva" runat="server" CssClass="form-control" TextMode="Date" placeholder="Fecha para agregar"></asp:TextBox>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <asp:DropDownList ID="ddlTipoNueva" runat="server" CssClass="form-control" Enabled="false"></asp:DropDownList>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <asp:Button ID="btnAgregarFecha" runat="server" Text="Agregar Fecha" CssClass="btn btn-primary btn-animated w-100" OnClick="btnAgregarFecha_Click" />
-                                </div>
-                            </div>
-
-                            <asp:GridView ID="gvFechasAgregadas" runat="server" AutoGenerateColumns="False"
-                                CssClass="table table-striped table-bordered mt-3" GridLines="None"
-                                OnRowCommand="gvFechasAgregadas_RowCommand">
-                                <Columns>
-                                    <asp:BoundField DataField="Fecha" HeaderText="Fecha" />
-                                    <asp:BoundField DataField="DiaSemana" HeaderText="Día" />
-                                    <asp:BoundField DataField="Tipo" HeaderText="Tipo Justificación" />
-                                    <asp:BoundField DataField="Descripcion" HeaderText="Descripción" />
-                                    <asp:ButtonField ButtonType="Button" CommandName="Eliminar" Text="Quitar"
-                                        ControlStyle-CssClass="btn btn-danger btn-sm" />
-                                </Columns>
-                            </asp:GridView>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-
-                <div class="gridview-container">
-                    <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="true"
-                        CssClass="table table-bordered gridview-custom" GridLines="None" />
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
                 </div>
             </div>
         </div>
     </form>
 
     <script>
-        function toggleFormulario() {
-            var form = document.getElementById("formularioAgregar");
-            form.style.display = (form.style.display === "none") ? "block" : "none";
+        function mostrarModal() {
+            var modal = new bootstrap.Modal(document.getElementById('modalFormulario'));
+            modal.show();
+        }
+        function cerrarYLimpiarModal() {
+            // Limpiar campos del formulario
+            document.getElementById('<%= txtNumJustificacion.ClientID %>').value = '';
+            document.getElementById('<%= txtFechaJustificacion.ClientID %>').value = '';
+            document.getElementById('<%= txtNumMemo.ClientID %>').value = '';
+            document.getElementById('<%= txtMotivo.ClientID %>').value = '';
+            document.getElementById('<%= txtIdUsuario.ClientID %>').value = '';
+            document.getElementById('<%= txtFechaCaptura.ClientID %>').value = '';
+            document.getElementById('<%= txtPeriodo.ClientID %>').value = '';
+            document.getElementById('<%= txtLugar.ClientID %>').value = '';
+            document.getElementById('<%= txtPIN.ClientID %>').value = '';
+            document.getElementById('<%= txtFechaNueva.ClientID %>').value = '';
+            document.getElementById('<%= ddlTipoJustificacion.ClientID %>').selectedIndex = 0;
+            document.getElementById('<%= ddlTipoNueva.ClientID %>').selectedIndex = 0;
+            document.getElementById('<%= ddlEmpleados.ClientID %>').selectedIndex = 0;
+
+            // Cerrar el modal con Bootstrap 5
+            var modal = bootstrap.Modal.getInstance(document.getElementById('modalFormulario'));
+            modal.hide();
         }
     </script>
 </body>

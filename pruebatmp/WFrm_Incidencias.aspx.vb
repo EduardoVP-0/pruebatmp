@@ -8,9 +8,11 @@ Partial Class WFrm_Incidencias
         If Not IsPostBack Then
             CargarTipoJustificacion()
             CargarTipoJustificacion1()
-            CargarEmpleados() ' NUEVO
+            CargarEmpleados()
+            btnMostrarVista_Click(Nothing, Nothing) ' ← Se llama automáticamente al iniciar la página
         End If
     End Sub
+
 
     Private Sub CargarTipoJustificacion()
         Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
@@ -100,22 +102,6 @@ Partial Class WFrm_Incidencias
     Protected Sub ddlEmpleados_SelectedIndexChanged(sender As Object, e As EventArgs)
 
         txtPIN.Text = ddlEmpleados.SelectedValue
-    End Sub
-
-    Protected Sub btnProbarConexion_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
-        Dim connection As New SqlConnection(connectionString)
-
-        Try
-            connection.Open()
-            lblResultado.CssClass = "mensaje text-success fs-5"
-            lblResultado.Text = "✅ Conexión exitosa a la base de datos."
-        Catch ex As Exception
-            lblResultado.CssClass = "mensaje text-danger fs-5"
-            lblResultado.Text = "❌ Error de conexión: " & ex.Message
-        Finally
-            connection.Close()
-        End Try
     End Sub
 
     Protected Sub btnMostrarVista_Click(ByVal sender As Object, ByVal e As EventArgs)
@@ -267,4 +253,6 @@ Partial Class WFrm_Incidencias
     Protected Sub ddlTipoJustificacion_SelectedIndexChanged(sender As Object, e As EventArgs)
         ddlTipoNueva.SelectedValue = ddlTipoJustificacion.SelectedValue
     End Sub
+
+
 End Class
