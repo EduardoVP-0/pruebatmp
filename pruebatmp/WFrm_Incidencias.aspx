@@ -9,94 +9,131 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-    :root {
-        --verde-gob: #009887;
-        --rosa-gob: #C90166;
-        --rojo-gob: #AE192D;
-        --beige-gob: #D3C2B4;
-        --negro: #000000;
-    }
+        :root {
+            --verde-gob: #009887;
+            --rosa-gob: #C90166;
+            --rojo-gob: #AE192D;
+            --beige-gob: #D3C2B4;
+            --negro: #000000;
+        }
 
-    body {
-        background: linear-gradient(135deg, var(--beige-gob), #ffffff);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        padding: 50px;
-    }
+        body {
+            background: linear-gradient(135deg, var(--beige-gob), #ffffff);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 50px;
+        }
 
-    .card-custom {
-        background-color: #ffffff;
-        border-left: 6px solid var(--verde-gob);
-        border-radius: 15px;
-        animation: fadeInUp 1s ease-in-out;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
+        .card-custom {
+            background-color: #ffffff;
+            border-left: 6px solid var(--verde-gob);
+            border-radius: 15px;
+            animation: fadeInUp 1s ease-in-out;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
 
-    h2, h5 {
-        color: var(--rojo-gob) !important;
-        font-weight: 700;
-    }
+        h2, h5 {
+            color: var(--rojo-gob) !important;
+            font-weight: 700;
+        }
 
-    .btn-animated {
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        font-weight: bold !important;
-        color: white !important;
-    }
+        .btn-animated {
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-weight: bold !important;
+            color: white !important;
+        }
 
-    .btn-animated:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-    }
+            .btn-animated:hover {
+                transform: scale(1.05);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            }
 
-    #btnMostrarFormulario {
-        background-color: var(--rosa-gob) !important;
-    }
+        #btnMostrarFormulario {
+            background-color: var(--rosa-gob) !important;
+        }
 
-    .btn-close {
-        background-color: #000;
-    }
+        .btn-close {
+            background-color: #000;
+        }
 
-    .mensaje {
-        animation: fadeIn 1s;
-        font-weight: bold;
-        text-align: center;
-        color: var(--negro) !important;
-    }
+        .mensaje {
+            animation: fadeIn 1s;
+            font-weight: bold;
+            text-align: center;
+            color: var(--negro) !important;
+        }
 
-    .gridview-container {
-        animation: fadeIn 1.5s ease-in;
-        margin-top: 20px;
-    }
+        .gridview-container {
+            animation: fadeIn 1.5s ease-in;
+            margin-top: 20px;
+        }
 
-    .gridview-custom th {
-        background-color: var(--verde-gob) !important;
-        color: white !important;
-        padding: 10px;
-        text-align: left;
-    }
+        .gridview-custom th {
+            background-color: var(--verde-gob) !important;
+            color: white !important;
+            padding: 10px;
+            text-align: left;
+        }
 
-    .gridview-custom td {
-        padding: 8px;
-        background-color: white;
-    }
+        .gridview-custom td {
+            padding: 8px;
+            background-color: white;
+        }
 
-    .gridview-custom tr:nth-child(even) {
-        background-color: var(--beige-gob);
-    }
+        .gridview-custom tr:nth-child(even) {
+            background-color: var(--beige-gob);
+        }
 
-    .gridview-custom tr:hover {
-        background-color: #f1f1f1;
-    }
+        .gridview-custom tr:hover {
+            background-color: #f1f1f1;
+        }
 
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .gridview-custom {
+            min-width: 800px; /* Ajusta esto según el contenido mínimo necesario */
+        }
+
+        html, body {
+            height: 100vh;
+            overflow: hidden; /* Oculta scroll vertical */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Contenedor para hacer scroll solo en la tabla */
+        .gridview-scrollable {
+            max-height: 60vh; /* Ajusta según el tamaño deseado */
+            overflow-y: auto;
+            overflow-x: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -115,9 +152,9 @@
                 <asp:Label ID="lblResultado" runat="server" CssClass="mensaje text-white fs-5" />
 
                 <!-- Vista principal -->
-                <div class="gridview-container">
+                <div class="gridview-container gridview-scrollable">
                     <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="true"
-                        CssClass="table table-bordered gridview-custom" GridLines="None" />
+                        CssClass="table table-bordered gridview-custom w-100" GridLines="None" />
                 </div>
             </div>
         </div>
@@ -155,7 +192,7 @@
                                     <div class="col-md-6 mb-2">
                                         <asp:TextBox ID="txtIdUsuario" runat="server" CssClass="form-control" placeholder="ID Usuario Captura"></asp:TextBox>
                                     </div>
-                                    <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN" Style="display:none;" />
+                                    <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN" Style="display: none;" />
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Captura"></asp:TextBox>
                                     </div>
