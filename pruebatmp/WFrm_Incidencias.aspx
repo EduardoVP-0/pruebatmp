@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="true" CodeFile="WFrm_Incidencias.aspx.vb" Inherits="WFrm_Incidencias" %>
+﻿<%@ Page Language="VB" AutoEventWireup="true" CodeFile="WFrm_Incidencias.aspx.vb" Inherits="WFrm_Incidencias" %> 
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
+        /* --- Tu mismo estilo original --- */
         :root {
             --verde-gob: #009887;
             --rosa-gob: #C90166;
@@ -16,13 +17,11 @@
             --beige-gob: #D3C2B4;
             --negro: #000000;
         }
-
         body {
             background: linear-gradient(135deg, var(--beige-gob), #ffffff);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 50px;
         }
-
         .card-custom {
             background-color: #ffffff;
             border-left: 6px solid var(--verde-gob);
@@ -30,105 +29,85 @@
             animation: fadeInUp 1s ease-in-out;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
-
         h2, h5 {
             color: var(--rojo-gob) !important;
             font-weight: 700;
         }
-
         .btn-animated {
             transition: all 0.3s ease-in-out;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             font-weight: bold !important;
             color: white !important;
         }
-
-            .btn-animated:hover {
-                transform: scale(1.05);
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-            }
-
+        .btn-animated:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+        }
         #btnMostrarFormulario {
             background-color: var(--rosa-gob) !important;
         }
-
         .btn-close {
             background-color: #000;
         }
-
         .mensaje {
             animation: fadeIn 1s;
             font-weight: bold;
             text-align: center;
             color: var(--negro) !important;
         }
-
         .gridview-container {
             animation: fadeIn 1.5s ease-in;
             margin-top: 20px;
         }
-
         .gridview-custom th {
             background-color: var(--verde-gob) !important;
             color: white !important;
             padding: 10px;
             text-align: left;
         }
-
         .gridview-custom td {
             padding: 8px;
             background-color: white;
         }
-
         .gridview-custom tr:nth-child(even) {
             background-color: var(--beige-gob);
         }
-
         .gridview-custom tr:hover {
             background-color: #f1f1f1;
         }
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
-
             to {
                 opacity: 1;
             }
         }
-
         .table-wrapper {
             overflow-x: auto;
             max-width: 100%;
         }
-
         .gridview-custom {
-            min-width: 800px; /* Ajusta esto según el contenido mínimo necesario */
+            min-width: 800px;
         }
-
         html, body {
             height: 100vh;
-            overflow: hidden; /* Oculta scroll vertical */
+            overflow: hidden;
             margin: 0;
             padding: 0;
         }
-
-        /* Contenedor para hacer scroll solo en la tabla */
         .gridview-scrollable {
-            max-height: 60vh; /* Ajusta según el tamaño deseado */
+            max-height: 60vh;
             overflow-y: auto;
             overflow-x: auto;
             border: 1px solid #ccc;
@@ -156,7 +135,8 @@
                     <asp:UpdatePanel ID="upVista" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
                             <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="true"
-                                CssClass="table table-bordered gridview-custom w-100" GridLines="None" />
+                                CssClass="table table-bordered gridview-custom w-100" GridLines="None"
+                                OnRowDataBound="gvVista_RowDataBound" />
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
@@ -188,7 +168,9 @@
                                         <asp:TextBox ID="txtNumMemo" runat="server" CssClass="form-control" placeholder="Número de Memo"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6 mb-2">
-                                        <asp:TextBox ID="txtMotivo" runat="server" CssClass="form-control" placeholder="Motivo de Justificación"></asp:TextBox>
+                                        <!-- Motivo más grande -->
+                                        <asp:TextBox ID="txtMotivo" runat="server" CssClass="form-control"
+                                            TextMode="MultiLine" Rows="4" placeholder="Motivo de Justificación"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <asp:DropDownList ID="ddlEmpleados" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlEmpleados_SelectedIndexChanged" />
@@ -198,7 +180,8 @@
                                     </div>
                                     <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN" Style="display: none;" />
                                     <div class="col-md-4 mb-2">
-                                        <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Captura"></asp:TextBox>
+                                        <!-- Fecha captura automática (readonly) -->
+                                        <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" ReadOnly="true" placeholder="Fecha Captura"></asp:TextBox>
                                     </div>
                                     <div class="col-md-4 mb-2">
                                         <asp:DropDownList ID="txtPeriodo" runat="server" CssClass="form-control" Enabled="false">
@@ -209,8 +192,6 @@
                                     </div>
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtLugar" runat="server" CssClass="form-control" placeholder="Lugar de Expedición"></asp:TextBox>
-
-
                                     </div>
                                 </div>
 
@@ -252,13 +233,14 @@
         </div>
     </form>
 
+    <!-- Scripts originales -->
     <script>
         function mostrarModal() {
             var modal = new bootstrap.Modal(document.getElementById('modalFormulario'));
             modal.show();
         }
         function cerrarYLimpiarModal() {
-            // Limpiar campos del formulario
+            // Limpiar campos
             document.getElementById('<%= txtNumJustificacion.ClientID %>').value = '';
             document.getElementById('<%= txtFechaJustificacion.ClientID %>').value = '';
             document.getElementById('<%= txtNumMemo.ClientID %>').value = '';
@@ -273,7 +255,7 @@
             document.getElementById('<%= ddlTipoNueva.ClientID %>').selectedIndex = 0;
             document.getElementById('<%= ddlEmpleados.ClientID %>').selectedIndex = 0;
 
-            // Cerrar el modal con Bootstrap 5
+            // Cerrar modal
             var modal = bootstrap.Modal.getInstance(document.getElementById('modalFormulario'));
             modal.hide();
         }

@@ -9,10 +9,13 @@ Partial Class WFrm_Incidencias
             CargarTipoJustificacion()
             CargarTipoJustificacion1()
             CargarEmpleados()
-            btnMostrarVista_Click(Nothing, Nothing) ' ← Se llama automáticamente al iniciar la página
+            ' Solo fecha automática
+            txtFechaCaptura.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+            btnMostrarVista_Click(Nothing, Nothing)
         End If
     End Sub
 
+    ' Quitar función de número automático
 
     Private Sub CargarTipoJustificacion()
         Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
@@ -72,7 +75,7 @@ Partial Class WFrm_Incidencias
         End Using
     End Sub
 
-    ' NUEVO: Cargar empleados desde la vista
+    ' Cargar empleados desde la vista
     Private Sub CargarEmpleados()
         Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
         Dim query As String = "SELECT Userid, NomEmpleado FROM VwC_Empleados WHERE status = 1 ORDER BY NomEmpleado"
@@ -98,9 +101,8 @@ Partial Class WFrm_Incidencias
         End Using
     End Sub
 
-    ' MODIFICADO: Cuando selecciona un empleado, rellenar también el PIN
+    ' Cuando selecciona un empleado, rellenar PIN
     Protected Sub ddlEmpleados_SelectedIndexChanged(sender As Object, e As EventArgs)
-
         txtPIN.Text = ddlEmpleados.SelectedValue
     End Sub
 
@@ -125,6 +127,18 @@ Partial Class WFrm_Incidencias
                 connection.Close()
             End Try
         End Using
+    End Sub
+
+    ' Formato de fecha sin hora en GridView
+    Protected Sub gvVista_RowDataBound(sender As Object, e As GridViewRowEventArgs)
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            For i As Integer = 0 To e.Row.Cells.Count - 1
+                Dim fechaTemp As DateTime
+                If DateTime.TryParse(e.Row.Cells(i).Text, fechaTemp) Then
+                    e.Row.Cells(i).Text = fechaTemp.ToString("dd/MM/yyyy")
+                End If
+            Next
+        End If
     End Sub
 
     Private Function ObtenerTablaTemporal() As DataTable
@@ -182,6 +196,20 @@ Partial Class WFrm_Incidencias
     End Sub
 
     Protected Sub btnGuardar_Click(ByVal sender As Object, ByVal e As EventArgs)
+        ' Validación de campos obligatorios
+        If String.IsNullOrWhiteSpace(txtNumJustificacion.Text) OrElse
+           ddlTipoJustificacion.SelectedIndex = 0 OrElse
+           String.IsNullOrWhiteSpace(txtFechaJustificacion.Text) OrElse
+           String.IsNullOrWhiteSpace(txtNumMemo.Text) OrElse
+           String.IsNullOrWhiteSpace(txtMotivo.Text) OrElse
+           ddlEmpleados.SelectedIndex = 0 OrElse
+           String.IsNullOrWhiteSpace(txtIdUsuario.Text) OrElse
+           String.IsNullOrWhiteSpace(txtLugar.Text) Then
+            lblResultado.CssClass = "mensaje text-danger fs-5"
+            lblResultado.Text = "⚠️ Debes llenar todos los campos antes de guardar."
+            Exit Sub
+        End If
+
         Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
 
         Using connection As New SqlConnection(connectionString)
@@ -189,7 +217,6 @@ Partial Class WFrm_Incidencias
             Dim transaction = connection.BeginTransaction()
 
             Try
-                ' Obtener la fecha máxima de la tabla temporal
                 Dim tabla As DataTable = ObtenerTablaTemporal()
                 Dim fechaMax As DateTime = Date.MinValue
 
@@ -200,13 +227,11 @@ Partial Class WFrm_Incidencias
                     End If
                 Next
 
-                ' Calcular siguiente día hábil (no sábado ni domingo)
                 Dim diaPresenta As DateTime = fechaMax.AddDays(1)
                 While diaPresenta.DayOfWeek = DayOfWeek.Saturday OrElse diaPresenta.DayOfWeek = DayOfWeek.Sunday
                     diaPresenta = diaPresenta.AddDays(1)
                 End While
 
-                ' Insertar en TblP_Justificaciones2
                 Dim queryJust As String = "INSERT INTO TblP_Justificaciones2 " &
                 "(Num_Justificacion, Tipo_Justificacion, Fecha_Justificacion, Num_Memo_Justificacion, Motivo_Justificacion, " &
                 "idusuario_Captura, Fecha_Captura, Periodo_Vacacional, Lugar_Exp, Dia_Presenta) " &
@@ -225,7 +250,6 @@ Partial Class WFrm_Incidencias
                 cmdJust.Parameters.AddWithValue("@DiaPresenta", diaPresenta)
                 cmdJust.ExecuteNonQuery()
 
-                ' Insertar las fechas en checkinout_justif2
                 For Each fila As DataRow In tabla.Rows
                     Dim queryCheck As String = "INSERT INTO checkinout_justif2 (Num_Justificacion, checktime, checktype, pin) " &
                                            "VALUES (@NumJust, @Fecha, @Tipo, @PIN)"
@@ -280,6 +304,5 @@ Partial Class WFrm_Incidencias
             txtPeriodo.Enabled = False
         End If
     End Sub
-
 
 End Class
