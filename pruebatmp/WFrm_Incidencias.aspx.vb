@@ -189,10 +189,28 @@ Partial Class WFrm_Incidencias
             Dim transaction = connection.BeginTransaction()
 
             Try
-                Dim queryJust As String = "INSERT INTO TblP_Justificaciones2" &
-                    "(Num_Justificacion, Tipo_Justificacion, Fecha_Justificacion, Num_Memo_Justificacion, Motivo_Justificacion," &
-                    "idusuario_Captura, Fecha_Captura, Periodo_Vacacional, Lugar_Exp)" &
-                    "VALUES (@NumJust, @TipoJust, @FechaJust, @NumMemo, @Motivo, @IdUsuario, @FechaCap, @Periodo, @Lugar)"
+                ' Obtener la fecha máxima de la tabla temporal
+                Dim tabla As DataTable = ObtenerTablaTemporal()
+                Dim fechaMax As DateTime = Date.MinValue
+
+                For Each fila As DataRow In tabla.Rows
+                    Dim fecha As DateTime = Convert.ToDateTime(fila("Fecha"))
+                    If fecha > fechaMax Then
+                        fechaMax = fecha
+                    End If
+                Next
+
+                ' Calcular siguiente día hábil (no sábado ni domingo)
+                Dim diaPresenta As DateTime = fechaMax.AddDays(1)
+                While diaPresenta.DayOfWeek = DayOfWeek.Saturday OrElse diaPresenta.DayOfWeek = DayOfWeek.Sunday
+                    diaPresenta = diaPresenta.AddDays(1)
+                End While
+
+                ' Insertar en TblP_Justificaciones2
+                Dim queryJust As String = "INSERT INTO TblP_Justificaciones2 " &
+                "(Num_Justificacion, Tipo_Justificacion, Fecha_Justificacion, Num_Memo_Justificacion, Motivo_Justificacion, " &
+                "idusuario_Captura, Fecha_Captura, Periodo_Vacacional, Lugar_Exp, Dia_Presenta) " &
+                "VALUES (@NumJust, @TipoJust, @FechaJust, @NumMemo, @Motivo, @IdUsuario, @FechaCap, @Periodo, @Lugar, @DiaPresenta)"
 
                 Dim cmdJust As New SqlCommand(queryJust, connection, transaction)
                 cmdJust.Parameters.AddWithValue("@NumJust", txtNumJustificacion.Text)
@@ -204,12 +222,13 @@ Partial Class WFrm_Incidencias
                 cmdJust.Parameters.AddWithValue("@FechaCap", Convert.ToDateTime(txtFechaCaptura.Text))
                 cmdJust.Parameters.AddWithValue("@Periodo", txtPeriodo.Text)
                 cmdJust.Parameters.AddWithValue("@Lugar", txtLugar.Text)
+                cmdJust.Parameters.AddWithValue("@DiaPresenta", diaPresenta)
                 cmdJust.ExecuteNonQuery()
 
-                Dim tabla As DataTable = ObtenerTablaTemporal()
+                ' Insertar las fechas en checkinout_justif2
                 For Each fila As DataRow In tabla.Rows
                     Dim queryCheck As String = "INSERT INTO checkinout_justif2 (Num_Justificacion, checktime, checktype, pin) " &
-                                               "VALUES (@NumJust, @Fecha, @Tipo, @PIN)"
+                                           "VALUES (@NumJust, @Fecha, @Tipo, @PIN)"
                     Dim cmdCheck As New SqlCommand(queryCheck, connection, transaction)
                     cmdCheck.Parameters.AddWithValue("@NumJust", txtNumJustificacion.Text)
                     cmdCheck.Parameters.AddWithValue("@Fecha", Convert.ToDateTime(fila("Fecha")))
@@ -222,7 +241,7 @@ Partial Class WFrm_Incidencias
                 lblResultado.CssClass = "mensaje text-success fs-5"
                 lblResultado.Text = "✅ Justificación y fechas guardadas correctamente."
 
-                ' Limpiar
+                ' Limpiar campos
                 txtNumJustificacion.Text = ""
                 txtFechaJustificacion.Text = ""
                 txtNumMemo.Text = ""
@@ -241,6 +260,8 @@ Partial Class WFrm_Incidencias
                 gvFechasAgregadas.DataSource = Nothing
                 gvFechasAgregadas.DataBind()
 
+                btnMostrarVista_Click(Nothing, Nothing)
+                upVista.Update()
             Catch ex As Exception
                 transaction.Rollback()
                 lblResultado.CssClass = "mensaje text-danger fs-5"
@@ -252,6 +273,12 @@ Partial Class WFrm_Incidencias
     ' Sincronizar tipo justificación en ambos combos
     Protected Sub ddlTipoJustificacion_SelectedIndexChanged(sender As Object, e As EventArgs)
         ddlTipoNueva.SelectedValue = ddlTipoJustificacion.SelectedValue
+        If ddlTipoJustificacion.SelectedItem.Text.ToUpper() = "VACACIONES" OrElse ddlTipoJustificacion.SelectedItem.Text.ToUpper() = "VACACIONES BASE" Then
+            txtPeriodo.Enabled = True
+        Else
+            txtPeriodo.SelectedIndex = 0
+            txtPeriodo.Enabled = False
+        End If
     End Sub
 
 

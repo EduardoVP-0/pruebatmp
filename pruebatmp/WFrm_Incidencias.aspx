@@ -153,8 +153,12 @@
 
                 <!-- Vista principal -->
                 <div class="gridview-container gridview-scrollable">
-                    <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="true"
-                        CssClass="table table-bordered gridview-custom w-100" GridLines="None" />
+                    <asp:UpdatePanel ID="upVista" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="true"
+                                CssClass="table table-bordered gridview-custom w-100" GridLines="None" />
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                 </div>
             </div>
         </div>
@@ -197,10 +201,16 @@
                                         <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" TextMode="DateTimeLocal" placeholder="Fecha Captura"></asp:TextBox>
                                     </div>
                                     <div class="col-md-4 mb-2">
-                                        <asp:TextBox ID="txtPeriodo" runat="server" CssClass="form-control" placeholder="Periodo Vacacional"></asp:TextBox>
+                                        <asp:DropDownList ID="txtPeriodo" runat="server" CssClass="form-control" Enabled="false">
+                                            <asp:ListItem Text="-- Selecciona el periodo --" Value="" />
+                                            <asp:ListItem Text="PRIMER PERIODO VACACIONAL 2025" Value="PRIMER PERIODO VACACIONAL 2025" />
+                                            <asp:ListItem Text="SEGUNDO PERIODO VACACIONAL 2025" Value="SEGUNDO PERIODO VACACIONAL 2025" />
+                                        </asp:DropDownList>
                                     </div>
                                     <div class="col-md-4 mb-2">
                                         <asp:TextBox ID="txtLugar" runat="server" CssClass="form-control" placeholder="Lugar de Expedición"></asp:TextBox>
+
+
                                     </div>
                                 </div>
 
@@ -255,7 +265,7 @@
             document.getElementById('<%= txtMotivo.ClientID %>').value = '';
             document.getElementById('<%= txtIdUsuario.ClientID %>').value = '';
             document.getElementById('<%= txtFechaCaptura.ClientID %>').value = '';
-            document.getElementById('<%= txtPeriodo.ClientID %>').value = '';
+            document.getElementById('<%= txtPeriodo.ClientID %>').selectedIndex = 0;
             document.getElementById('<%= txtLugar.ClientID %>').value = '';
             document.getElementById('<%= txtPIN.ClientID %>').value = '';
             document.getElementById('<%= txtFechaNueva.ClientID %>').value = '';
@@ -267,6 +277,20 @@
             var modal = bootstrap.Modal.getInstance(document.getElementById('modalFormulario'));
             modal.hide();
         }
+        document.addEventListener("DOMContentLoaded", function () {
+            const ddlTipo = document.getElementById('<%= ddlTipoJustificacion.ClientID %>');
+            const ddlPeriodo = document.getElementById('<%= txtPeriodo.ClientID %>');
+
+            ddlTipo.addEventListener("change", function () {
+                const seleccion = ddlTipo.options[ddlTipo.selectedIndex].text.toUpperCase();
+                if (seleccion === "VACACIONES" || seleccion === "VACACIONES BASE") {
+                    ddlPeriodo.disabled = false;
+                } else {
+                    ddlPeriodo.selectedIndex = 0;
+                    ddlPeriodo.disabled = true;
+                }
+            });
+        });
     </script>
 </body>
 </html>
