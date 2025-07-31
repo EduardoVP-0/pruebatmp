@@ -179,10 +179,7 @@
                                         <asp:TextBox ID="txtIdUsuario" runat="server" CssClass="form-control" placeholder="ID Usuario Captura"></asp:TextBox>
                                     </div>
                                     <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN" Style="display: none;" />
-                                    <div class="col-md-4 mb-2">
-                                        <!-- Fecha captura automática (readonly) -->
-                                        <asp:TextBox ID="txtFechaCaptura" runat="server" CssClass="form-control" ReadOnly="true" placeholder="Fecha Captura"></asp:TextBox>
-                                    </div>
+                                    
                                     <div class="col-md-4 mb-2">
                                         <asp:DropDownList ID="txtPeriodo" runat="server" CssClass="form-control" Enabled="false">
                                             <asp:ListItem Text="-- Selecciona el periodo --" Value="" />
@@ -246,7 +243,7 @@
             document.getElementById('<%= txtNumMemo.ClientID %>').value = '';
             document.getElementById('<%= txtMotivo.ClientID %>').value = '';
             document.getElementById('<%= txtIdUsuario.ClientID %>').value = '';
-            document.getElementById('<%= txtFechaCaptura.ClientID %>').value = '';
+            
             document.getElementById('<%= txtPeriodo.ClientID %>').selectedIndex = 0;
             document.getElementById('<%= txtLugar.ClientID %>').value = '';
             document.getElementById('<%= txtPIN.ClientID %>').value = '';

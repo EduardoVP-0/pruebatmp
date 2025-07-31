@@ -9,8 +9,7 @@ Partial Class WFrm_Incidencias
             CargarTipoJustificacion()
             CargarTipoJustificacion1()
             CargarEmpleados()
-            ' Solo fecha automática
-            txtFechaCaptura.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+
             btnMostrarVista_Click(Nothing, Nothing)
         End If
     End Sub
@@ -244,7 +243,7 @@ Partial Class WFrm_Incidencias
                 cmdJust.Parameters.AddWithValue("@NumMemo", txtNumMemo.Text)
                 cmdJust.Parameters.AddWithValue("@Motivo", txtMotivo.Text)
                 cmdJust.Parameters.AddWithValue("@IdUsuario", txtIdUsuario.Text)
-                cmdJust.Parameters.AddWithValue("@FechaCap", Convert.ToDateTime(txtFechaCaptura.Text))
+                cmdJust.Parameters.AddWithValue("@FechaCap", DateTime.Now)
                 cmdJust.Parameters.AddWithValue("@Periodo", txtPeriodo.Text)
                 cmdJust.Parameters.AddWithValue("@Lugar", txtLugar.Text)
                 cmdJust.Parameters.AddWithValue("@DiaPresenta", diaPresenta)
@@ -271,7 +270,7 @@ Partial Class WFrm_Incidencias
                 txtNumMemo.Text = ""
                 txtMotivo.Text = ""
                 txtIdUsuario.Text = ""
-                txtFechaCaptura.Text = ""
+
                 txtPeriodo.Text = ""
                 txtLugar.Text = ""
                 txtPIN.Text = ""
