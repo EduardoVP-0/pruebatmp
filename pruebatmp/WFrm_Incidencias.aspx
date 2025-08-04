@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" AutoEventWireup="true" CodeFile="WFrm_Incidencias.aspx.vb" Inherits="WFrm_Incidencias" %> 
+﻿<%@ Page Language="VB" AutoEventWireup="true" CodeFile="WFrm_Incidencias.aspx.vb" Inherits="WFrm_Incidencias" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -17,11 +17,13 @@
             --beige-gob: #D3C2B4;
             --negro: #000000;
         }
+
         body {
             background: linear-gradient(135deg, var(--beige-gob), #ffffff);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             padding: 50px;
         }
+
         .card-custom {
             background-color: #ffffff;
             border-left: 6px solid var(--verde-gob);
@@ -29,83 +31,102 @@
             animation: fadeInUp 1s ease-in-out;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
+
         h2, h5 {
             color: var(--rojo-gob) !important;
             font-weight: 700;
         }
+
         .btn-animated {
             transition: all 0.3s ease-in-out;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             font-weight: bold !important;
             color: white !important;
         }
-        .btn-animated:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-        }
+
+            .btn-animated:hover {
+                transform: scale(1.05);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            }
+
         #btnMostrarFormulario {
             background-color: var(--rosa-gob) !important;
         }
+
         .btn-close {
             background-color: #000;
         }
+
         .mensaje {
             animation: fadeIn 1s;
             font-weight: bold;
             text-align: center;
             color: var(--negro) !important;
         }
+
         .gridview-container {
             animation: fadeIn 1.5s ease-in;
             margin-top: 20px;
         }
+
         .gridview-custom th {
             background-color: var(--verde-gob) !important;
             color: white !important;
             padding: 10px;
             text-align: left;
         }
+
         .gridview-custom td {
             padding: 8px;
             background-color: white;
         }
+
         .gridview-custom tr:nth-child(even) {
             background-color: var(--beige-gob);
         }
+
         .gridview-custom tr:hover {
             background-color: #f1f1f1;
         }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
         }
+
         .table-wrapper {
             overflow-x: auto;
             max-width: 100%;
         }
+
         .gridview-custom {
             min-width: 800px;
         }
+
         html, body {
             height: 100vh;
             overflow: hidden;
             margin: 0;
             padding: 0;
         }
+
         .gridview-scrollable {
             max-height: 60vh;
             overflow-y: auto;
@@ -126,6 +147,7 @@
                 <div class="text-center mb-3">
                     <asp:Button ID="btnMostrarFormulario" runat="server" Text="Agregar Justificación"
                         CssClass="btn btn-animated mt-2" OnClientClick="mostrarModal(); return false;" />
+
                 </div>
 
                 <asp:Label ID="lblResultado" runat="server" CssClass="mensaje text-white fs-5" />
@@ -134,9 +156,30 @@
                 <div class="gridview-container gridview-scrollable">
                     <asp:UpdatePanel ID="upVista" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="true"
+                            <asp:GridView ID="gvVista" runat="server" AutoGenerateColumns="False"
                                 CssClass="table table-bordered gridview-custom w-100" GridLines="None"
-                                OnRowDataBound="gvVista_RowDataBound" />
+                                OnRowDataBound="gvVista_RowDataBound"
+                                
+                                DataKeyNames="Num_Justificacion">
+                                <Columns>
+                                    <%-- Ejemplo de columnas que puedes personalizar --%>
+                                    <asp:BoundField DataField="Num_Justificacion" HeaderText="Núm Justificación" />
+                                    <asp:BoundField DataField="idUsuario" HeaderText="ID" />
+                                    <asp:BoundField DataField="cardno" HeaderText="Tarjeta" />
+                                    <asp:BoundField DataField="NomEmpleado" HeaderText="Nombre" />
+                                    <asp:BoundField DataField="Fecha_Justificacion" HeaderText="Fecha_Memo" DataFormatString="{0:dd/MM/yyyy}" />
+                                    <asp:BoundField DataField="Num_Memo_Justificacion" HeaderText="Nu_Memorandum" />
+                                    <asp:BoundField DataField="ndias" HeaderText="Dias_Incidencia" />
+                                    <asp:BoundField DataField="Desc_Tipo_Incidencia" HeaderText="Tipo_Incidencia" />
+                                    <asp:BoundField DataField="Motivo_Justificacion" HeaderText="Motivo" />
+                                    <asp:BoundField DataField="Periodo_Vacacional" HeaderText="Periodo" />
+                                    <asp:BoundField DataField="Lugar_Exp" HeaderText="Lugar_Expedicion" />
+                                    <asp:BoundField DataField="Dia_Presenta" HeaderText="Dia_Presenta" />
+                                    <%-- Aquí puedes añadir más campos si deseas --%>
+                                    
+                                </Columns>
+                            </asp:GridView>
+
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
@@ -155,9 +198,7 @@
                         <asp:UpdatePanel ID="upFormulario" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
                                 <div class="row">
-                                    <div class="col-md-4 mb-2">
-                                        <asp:TextBox ID="txtNumJustificacion" runat="server" CssClass="form-control" placeholder="Número Justificación"></asp:TextBox>
-                                    </div>
+
                                     <div class="col-md-4 mb-2">
                                         <asp:DropDownList ID="ddlTipoJustificacion" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoJustificacion_SelectedIndexChanged"></asp:DropDownList>
                                     </div>
@@ -179,7 +220,7 @@
                                         <asp:TextBox ID="txtIdUsuario" runat="server" CssClass="form-control" placeholder="ID Usuario Captura"></asp:TextBox>
                                     </div>
                                     <asp:TextBox ID="txtPIN" runat="server" CssClass="form-control" placeholder="PIN" Style="display: none;" />
-                                    
+
                                     <div class="col-md-4 mb-2">
                                         <asp:DropDownList ID="txtPeriodo" runat="server" CssClass="form-control" Enabled="false">
                                             <asp:ListItem Text="-- Selecciona el periodo --" Value="" />
@@ -238,12 +279,12 @@
         }
         function cerrarYLimpiarModal() {
             // Limpiar campos
-            document.getElementById('<%= txtNumJustificacion.ClientID %>').value = '';
+
             document.getElementById('<%= txtFechaJustificacion.ClientID %>').value = '';
             document.getElementById('<%= txtNumMemo.ClientID %>').value = '';
             document.getElementById('<%= txtMotivo.ClientID %>').value = '';
             document.getElementById('<%= txtIdUsuario.ClientID %>').value = '';
-            
+
             document.getElementById('<%= txtPeriodo.ClientID %>').selectedIndex = 0;
             document.getElementById('<%= txtLugar.ClientID %>').value = '';
             document.getElementById('<%= txtPIN.ClientID %>').value = '';

@@ -59,7 +59,7 @@ Partial Class WFrm_Incidencias
                 ddlTipoJustificacion.DataTextField = "Desc_Tipo_Incidencia"
                 ddlTipoJustificacion.DataValueField = "checktype"
                 ddlTipoJustificacion.DataBind()
-                ddlTipoJustificacion.Items.Insert(0, New ListItem("-- Tipo de Justificación --", ""))
+
 
                 ddlTipoNueva.DataSource = dt
                 ddlTipoNueva.DataTextField = "Desc_Tipo_Incidencia"
@@ -92,7 +92,7 @@ Partial Class WFrm_Incidencias
                 ddlEmpleados.DataTextField = "NomEmpleado"
                 ddlEmpleados.DataValueField = "Userid"
                 ddlEmpleados.DataBind()
-                ddlEmpleados.Items.Insert(0, New ListItem("-- Selecciona un Empleado --", ""))
+
             Catch ex As Exception
                 lblResultado.CssClass = "mensaje text-danger fs-5"
                 lblResultado.Text = "❌ Error al cargar empleados: " & ex.Message
@@ -196,18 +196,18 @@ Partial Class WFrm_Incidencias
 
     Protected Sub btnGuardar_Click(ByVal sender As Object, ByVal e As EventArgs)
         ' Validación de campos obligatorios
-        If String.IsNullOrWhiteSpace(txtNumJustificacion.Text) OrElse
-           ddlTipoJustificacion.SelectedIndex = 0 OrElse
-           String.IsNullOrWhiteSpace(txtFechaJustificacion.Text) OrElse
-           String.IsNullOrWhiteSpace(txtNumMemo.Text) OrElse
-           String.IsNullOrWhiteSpace(txtMotivo.Text) OrElse
-           ddlEmpleados.SelectedIndex = 0 OrElse
-           String.IsNullOrWhiteSpace(txtIdUsuario.Text) OrElse
-           String.IsNullOrWhiteSpace(txtLugar.Text) Then
+        If ddlTipoJustificacion.SelectedIndex = 0 OrElse
+   String.IsNullOrWhiteSpace(txtFechaJustificacion.Text) OrElse
+   String.IsNullOrWhiteSpace(txtNumMemo.Text) OrElse
+   String.IsNullOrWhiteSpace(txtMotivo.Text) OrElse
+   ddlEmpleados.SelectedIndex = 0 OrElse
+   String.IsNullOrWhiteSpace(txtIdUsuario.Text) OrElse
+   String.IsNullOrWhiteSpace(txtLugar.Text) Then
             lblResultado.CssClass = "mensaje text-danger fs-5"
             lblResultado.Text = "⚠️ Debes llenar todos los campos antes de guardar."
             Exit Sub
         End If
+
 
         Dim connectionString As String = "Server=172.16.34.9;Database=SimadOC;User Id=Sa;Password=Seigen2019;"
 
@@ -230,6 +230,12 @@ Partial Class WFrm_Incidencias
                 While diaPresenta.DayOfWeek = DayOfWeek.Saturday OrElse diaPresenta.DayOfWeek = DayOfWeek.Sunday
                     diaPresenta = diaPresenta.AddDays(1)
                 End While
+                Dim nuevoNumJustificacion As Integer
+                Using conn As New SqlConnection(connectionString)
+                    conn.Open()
+                    Dim cmdMax As New SqlCommand("SELECT ISNULL(MAX(Num_Justificacion), 0) + 1 FROM TblP_Justificaciones2", conn)
+                    nuevoNumJustificacion = Convert.ToInt32(cmdMax.ExecuteScalar())
+                End Using
 
                 Dim queryJust As String = "INSERT INTO TblP_Justificaciones2 " &
                 "(Num_Justificacion, Tipo_Justificacion, Fecha_Justificacion, Num_Memo_Justificacion, Motivo_Justificacion, " &
@@ -237,7 +243,7 @@ Partial Class WFrm_Incidencias
                 "VALUES (@NumJust, @TipoJust, @FechaJust, @NumMemo, @Motivo, @IdUsuario, @FechaCap, @Periodo, @Lugar, @DiaPresenta)"
 
                 Dim cmdJust As New SqlCommand(queryJust, connection, transaction)
-                cmdJust.Parameters.AddWithValue("@NumJust", txtNumJustificacion.Text)
+                cmdJust.Parameters.AddWithValue("@NumJust", nuevoNumJustificacion)
                 cmdJust.Parameters.AddWithValue("@TipoJust", ddlTipoJustificacion.SelectedValue)
                 cmdJust.Parameters.AddWithValue("@FechaJust", Convert.ToDateTime(txtFechaJustificacion.Text))
                 cmdJust.Parameters.AddWithValue("@NumMemo", txtNumMemo.Text)
@@ -253,7 +259,7 @@ Partial Class WFrm_Incidencias
                     Dim queryCheck As String = "INSERT INTO checkinout_justif2 (Num_Justificacion, checktime, checktype, pin) " &
                                            "VALUES (@NumJust, @Fecha, @Tipo, @PIN)"
                     Dim cmdCheck As New SqlCommand(queryCheck, connection, transaction)
-                    cmdCheck.Parameters.AddWithValue("@NumJust", txtNumJustificacion.Text)
+                    cmdCheck.Parameters.AddWithValue("@NumJust", nuevoNumJustificacion)
                     cmdCheck.Parameters.AddWithValue("@Fecha", Convert.ToDateTime(fila("Fecha")))
                     cmdCheck.Parameters.AddWithValue("@Tipo", fila("Tipo").ToString())
                     cmdCheck.Parameters.AddWithValue("@PIN", txtPIN.Text)
@@ -265,7 +271,7 @@ Partial Class WFrm_Incidencias
                 lblResultado.Text = "✅ Justificación y fechas guardadas correctamente."
 
                 ' Limpiar campos
-                txtNumJustificacion.Text = ""
+
                 txtFechaJustificacion.Text = ""
                 txtNumMemo.Text = ""
                 txtMotivo.Text = ""
